@@ -69,11 +69,14 @@ def write_triples_to_graph(triples):
             if not predicate or len(predicate) < 3:
                 continue
 
+            obj_label = t.get("object_type", "Entity")
+
             query = f"""
-            MERGE (s:Entity {{name:$subject}})
-            MERGE (o:Entity {{name:$object}})
+            MERGE (s:Company {{name:$subject}})
+            MERGE (o:{obj_label} {{name:$object}})
             MERGE (s)-[:{predicate}]->(o)
             """
+
 
             session.run(
                 query,

@@ -25,13 +25,21 @@ from app.pipeline.graph_pipeline import run_graph_pipeline
 router = APIRouter()
 
 
+# @router.get("/research")
+# def research(query: str):
+
+#     result = run_graph_pipeline(query)
+
+#     return {
+#         "message": "Research completed and stored in Neo4j",
+#         "query": query,
+#         "triples_written": result
+#     }
+
 @router.get("/research")
 def research(query: str):
 
     result = run_graph_pipeline(query)
 
-    return {
-        "message": "Research completed and stored in Neo4j",
-        "query": query,
-        "triples_written": result
-    }
+    return result
+

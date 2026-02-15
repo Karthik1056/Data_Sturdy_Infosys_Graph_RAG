@@ -9,6 +9,7 @@ def plan_research(user_query: str):
         f"{user_query} AI strategy",
         # f"{user_query} investor relations",
         # f"{user_query} hiring trends"
+        # commented out some angles to reduce load on search engine during development and laptop cannot load this much at onnce
     ]
 
     research_data = {}

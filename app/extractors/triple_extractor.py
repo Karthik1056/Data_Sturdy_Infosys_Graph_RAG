@@ -9,59 +9,64 @@ MODEL = "qwen2.5:3b-instruct-q4_K_M"
 def extract_triples(text: str):
 
     prompt = f"""
-You are an elite information extraction system.
+You are an elite knowledge graph extraction system.
 
-Extract ONLY high-value strategic knowledge.
+Extract ONLY strategic, boardroom-level knowledge.
 
 IGNORE:
 - founding year
-- revenue
 - headquarters
 - slogans
-- generic descriptions
 - employee counts
+- generic descriptions
 
 FOCUS ON:
-- strategy
-- AI initiatives
+- AI strategy
+- digital transformation
+- platforms
 - partnerships
 - acquisitions
-- competition
 - capabilities
-- platforms
-- transformation efforts
+- competitive positioning
 
-Return STRICT JSON.
+RETURN STRICT JSON.
 
-Format example (values are dynamic, do NOT copy):
+FORMAT:
 
 [
  {{
-   "subject": "<real entity from text>",
-   "predicate": "<RELATIONSHIP_IN_UPPERCASE>",
-   "object": "<real entity from text>",
-   "confidence": 0.0-1.0
+   "subject": "Infosys",
+   "predicate": "INVESTS_IN",
+   "object": "Generative AI",
+   "object_type": "Technology",
+   "confidence": 0.82
  }}
 ]
 
 RULES:
-- Subject and object MUST be real named entities from the text
-- NEVER output generic terms like "company", "entity", "organization"
-- Predicate MUST be uppercase with underscores
-- Avoid vague objects like "innovation" or "growth"
-- No duplicate triples
-- No explanations
 
-Prefer these predicates when possible:
-PARTNERS_WITH, ACQUIRES, COMPETES_WITH, INVESTS_IN,
-USES_TECH, BUILDS_PLATFORM, FOCUSES_ON, OFFERS,
-EXPANDS_TO, LEADS_IN
+- predicate MUST be uppercase with underscores
+- object_type MUST be one of:
 
-Only include triples with confidence >= 0.6.
+Company  
+Technology  
+Platform  
+Sector  
+Strategy  
+Partnership  
+Acquisition  
+Capability  
+
+- MAXIMUM 5 triples
+- confidence must be 0–1
+- ignore anything below 0.65
+- no explanations
+- no extra text
 
 TEXT:
 {text}
 """
+
 
 
     response = requests.post(
