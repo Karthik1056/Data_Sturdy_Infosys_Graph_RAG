@@ -5,32 +5,46 @@ MODEL = "qwen2.5:3b-instruct-q4_K_M"
 
 
 def generate_answer(query, context):
-
     prompt = f"""
-You are a senior enterprise strategy analyst.
+    Act as a Senior Enterprise Strategy Analyst specializing in AI-driven competitive intelligence.
+    Analyze the provided Knowledge Graph context to generate a high-density strategic report.
+    
+    RULES:
+    - RETURN ONLY VALID JSON. No conversational text.
+    - Ground all insights in the provided Graph Data.
+    - If data is sparse, prioritize "Ecosystem Signals" based on available triples.
 
-Use ONLY the knowledge graph relationships below.
+    OUTPUT SCHEMA:
+    {{
+      "executive_summary": "A 50-sentence synthesis of the competitive landscape.",
+      "market_sentiment": "Accelerating | Correcting | Consolidated",
+      "entities": [
+        {{
+          "name": "Full Entity Name",
+          "core_strategy": "Primary strategic objective",
+          "capabilities": ["List specific technical/operational strengths"],
+          "weakness_gap": "Potential vulnerability identified",
+          "ecosystem_signals": "Upcoming moves, hiring trends, or patent focus",
+          "swot": {{ "strengths": [], "threats": [] }}
+        }}
+      ],
+      "strategic_differences": [
+        {{
+          "dimension": "e.g., Pricing, AI Maturity, GTM Strategy",
+          "entity_a_status": "...",
+          "entity_b_status": "..."
+        }}
+      ],
+      "recommended_actions": ["3-5 high-impact strategic pivots based on the gaps"]
+    }}
 
-Do NOT hallucinate.
+    GRAPH DATA:
+    {context}
 
-If data is limited, say so.
-
-Provide:
-
-• competitive insight  
-• strategic positioning  
-• capability differences  
-• ecosystem signals  
-
-GRAPH RELATIONSHIPS:
-{context}
-
-
-QUESTION:
-{query}
-"""
-
-
+    QUESTION:
+    {query}
+    """
+    # ... rest of your existing requests logic
     response = requests.post(
         OLLAMA_URL,
         json={
@@ -41,6 +55,7 @@ QUESTION:
     )
 
     data = response.json().get("response", "")
+    print("Raw LLM Output:", data)
 
     if not data:
         return "No strategic insight could be generated from the current graph."

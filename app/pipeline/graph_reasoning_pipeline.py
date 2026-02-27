@@ -48,27 +48,22 @@ from app.reasoning.fallback_llm import fallback_summary
 
 def run_reasoning_pipeline(query: str):
 
-    print("\n🧠 Phase 3 — Strategic Reasoning Started...\n")
+    print("\n Phase 3 — Strategic Reasoning Started...\n")
 
-    # STEP 1 — Extract intent
     intent_data = extract_intent(query)
     print("Intent:", intent_data)
 
-    # STEP 2 — Safe Graph Retrieval
     try:
         context = retrieve_graph_context()
     except Exception as e:
-        print("⚠️ Neo4j retrieval failed:", str(e))
+        print(" Neo4j retrieval failed:", str(e))
         context = ""
 
-    # STEP 3 — Evidence Count
     evidence_count = context.count("\n") if context else 0
-    print(f"📊 Evidence triples found: {evidence_count}")
 
-    # STEP 4 — Smart Routing
     if evidence_count < 5:
 
-        print("⚠️ Weak graph signal. Switching to LLM fallback...\n")
+        print(" Weak graph signal. Switching to LLM fallback...\n")
 
         fallback_answer = fallback_summary(query)
 
@@ -79,8 +74,7 @@ def run_reasoning_pipeline(query: str):
             "answer": fallback_answer
         }
 
-    # STEP 5 — GraphRAG Answer
-    print("✅ Strong graph detected. Generating GraphRAG answer...\n")
+    print(" Strong graph detected. Generating GraphRAG answer...\n")
 
     answer = generate_answer(query, context)
 

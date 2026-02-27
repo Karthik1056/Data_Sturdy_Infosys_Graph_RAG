@@ -2,14 +2,13 @@ from app.crawlers.tools.search_tool import web_search
 from app.crawlers.tools.content_extractor import extract_webpage_content
 
 
-def dynamic_research(query: str):
-
+def dynamic_research(query: str ):
+    """Enhanced research with more sources"""
     search_results = web_search(query)
 
     intelligence_bundle = []
 
     for result in search_results:
-
         page_content = extract_webpage_content(result["url"])
 
         intelligence_bundle.append({
